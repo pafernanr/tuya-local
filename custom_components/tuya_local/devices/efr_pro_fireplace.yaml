@@ -1,0 +1,187 @@
+# EF-R(PRO) electric fireplace with decorative flame and ember LED effects.
+#
+# The heater has two power levels (Lo / HI) controlled via dp 4 as a string
+# enum rather than a standard Tuya climate instruction set, so it is modelled
+# as a select instead of climate.
+#
+# Flame (dp 5) and ember (dp 101) each have 13 colour presets plus a cycling
+# mode (F14 / C14). Colours per the Chinese firmware description:
+#   01=yellow 02=red 03=blue 04=green 05=purple 06=cyan 07=brown
+#   08=pink 09=light blue 10=light green 11=light purple 12=light cyan
+#   13=light grey 14=cycle through 01-13
+#
+# dp 13 is temperature unit (0=Celsius, 1=Fahrenheit), not a fault code.
+# dp 23 is a 3-bit fault bitmap (fault1, fault2, fault3).
+name: Electric fireplace
+products:
+  - id: m0chyz1cdsaltkmd
+    manufacturer: EF-R
+    model: PRO
+entities:
+  - entity: switch
+    icon: "mdi:fireplace"
+    dps:
+      - id: 1
+        type: boolean
+        name: switch
+  - entity: number
+    translation_key: target_temperature
+    dps:
+      - id: 2
+        type: integer
+        name: value
+        unit: "°C"
+        range:
+          min: 17
+          max: 99
+  - entity: sensor
+    class: temperature
+    category: diagnostic
+    dps:
+      - id: 3
+        type: integer
+        name: sensor
+        unit: "°C"
+        class: measurement
+  - entity: select
+    name: Heat mode
+    icon: "mdi:radiator"
+    dps:
+      - id: 4
+        type: string
+        name: option
+        mapping:
+          - dps_val: "OFF"
+            value: "Off"
+          - dps_val: "Lo"
+            value: "Low"
+          - dps_val: "HI"
+            value: "High"
+  - entity: select
+    translation_key: flame
+    icon: "mdi:fire"
+    category: config
+    dps:
+      - id: 5
+        type: string
+        name: option
+        mapping:
+          - dps_val: "F01"
+            value: "Yellow"
+          - dps_val: "F02"
+            value: "Red"
+          - dps_val: "F03"
+            value: "Blue"
+          - dps_val: "F04"
+            value: "Green"
+          - dps_val: "F05"
+            value: "Purple"
+          - dps_val: "F06"
+            value: "Cyan"
+          - dps_val: "F07"
+            value: "Brown"
+          - dps_val: "F08"
+            value: "Pink"
+          - dps_val: "F09"
+            value: "Light blue"
+          - dps_val: "F10"
+            value: "Light green"
+          - dps_val: "F11"
+            value: "Light purple"
+          - dps_val: "F12"
+            value: "Light cyan"
+          - dps_val: "F13"
+            value: "Light grey"
+          - dps_val: "F14"
+            value: "Cycle"
+  - entity: select
+    translation_key: temperature_unit
+    category: config
+    dps:
+      - id: 13
+        type: string
+        name: option
+        mapping:
+          - dps_val: "0"
+            value: celsius
+          - dps_val: "1"
+            value: fahrenheit
+  - entity: select
+    translation_key: timer
+    category: config
+    dps:
+      - id: 19
+        type: string
+        name: option
+        mapping:
+          - dps_val: "cancel"
+            value: cancel
+          - dps_val: "1h"
+            value: "1h"
+          - dps_val: "2h"
+            value: "2h"
+          - dps_val: "3h"
+            value: "3h"
+          - dps_val: "4h"
+            value: "4h"
+          - dps_val: "5h"
+            value: "5h"
+          - dps_val: "6h"
+            value: "6h"
+          - dps_val: "7h"
+            value: "7h"
+          - dps_val: "8h"
+            value: "8h"
+          - dps_val: "9h"
+            value: "9h"
+  - entity: binary_sensor
+    class: problem
+    category: diagnostic
+    dps:
+      - id: 23
+        type: bitfield
+        name: sensor
+        mapping:
+          - dps_val: 0
+            value: false
+          - value: true
+      - id: 23
+        type: bitfield
+        name: fault_code
+  - entity: select
+    translation_key: embers
+    icon: "mdi:campfire"
+    category: config
+    dps:
+      - id: 101
+        type: string
+        name: option
+        mapping:
+          - dps_val: "C01"
+            value: "Yellow"
+          - dps_val: "C02"
+            value: "Red"
+          - dps_val: "C03"
+            value: "Blue"
+          - dps_val: "C04"
+            value: "Green"
+          - dps_val: "C05"
+            value: "Purple"
+          - dps_val: "C06"
+            value: "Cyan"
+          - dps_val: "C07"
+            value: "Brown"
+          - dps_val: "C08"
+            value: "Pink"
+          - dps_val: "C09"
+            value: "Light blue"
+          - dps_val: "C10"
+            value: "Light green"
+          - dps_val: "C11"
+            value: "Light purple"
+          - dps_val: "C12"
+            value: "Light cyan"
+          - dps_val: "C13"
+            value: "Light grey"
+          - dps_val: "C14"
+            value: "Cycle"
